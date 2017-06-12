@@ -87,6 +87,10 @@ class MarathonSpawner(Spawner):
         """
     ).tag(config=True)
 
+    accepted_resource_roles =  List(
+      [],
+      help='Accepted resource roles to pass to Marathon').tag(config=True)
+
     @default('format_volume_name')
     def _get_default_format_volume_name(self):
         return default_format_volume_name
@@ -240,6 +244,7 @@ class MarathonSpawner(Spawner):
 
         app_request = MarathonApp(
             id=self.container_name,
+            accepted_resource_roles=self.accepted_resource_roles,
             env=self.get_env(),
             cpus=self.cpu_limit,
             mem=mem_request,
