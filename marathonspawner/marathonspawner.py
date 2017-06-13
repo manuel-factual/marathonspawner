@@ -6,7 +6,7 @@ from urllib.parse import urlparse, urlunparse
 from textwrap import dedent
 from tornado import gen
 from tornado.concurrent import run_on_executor
-from traitlets import Any, Integer, List, Unicode, default
+from traitlets import Any, Integer, List, Unicode, Bool, default
 
 from marathon import MarathonClient
 from marathon.models.app import MarathonApp, MarathonHealthCheck
@@ -90,6 +90,10 @@ class MarathonSpawner(Spawner):
     accepted_resource_roles =  List(
       [],
       help='Accepted resource roles to pass to Marathon').tag(config=True)
+
+    force_pull_image =  Bool(
+      False,
+      help='Whether Marathon should force pull the image when spawning').tag(config=True)
 
     @default('format_volume_name')
     def _get_default_format_volume_name(self):
@@ -229,6 +233,7 @@ class MarathonSpawner(Spawner):
         docker_container = MarathonDockerContainer(
             image=self.app_image,
             network=self.network_mode,
+            force_pull_image=self.force_pull_image,
             port_mappings=self.get_port_mappings())
 
         app_container = MarathonContainer(
