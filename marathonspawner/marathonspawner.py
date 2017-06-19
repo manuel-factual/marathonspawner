@@ -228,6 +228,9 @@ class MarathonSpawner(Spawner):
         env['JPY_HUB_API_URL'] = hub_api_url
         return env
 
+    def get_secrets(self):
+      return []
+
     @gen.coroutine
     def start(self):
         docker_container = MarathonDockerContainer(
@@ -256,6 +259,7 @@ class MarathonSpawner(Spawner):
             container=app_container,
             constraints=self.get_constraints(),
             health_checks=self.get_health_checks(),
+            secrets=self.get_secrets(),
             instances=1
             )
 
